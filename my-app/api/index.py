@@ -4,14 +4,15 @@ import os
 from http.server import BaseHTTPRequestHandler
 
 try:
-    with open('marks.txt', 'r') as f:
-        marks_data = {}
-        for line in f:
-            name, mark = line.strip().split(',')
-            marks_data[name] = int(mark)
+    with open('marks.json', 'r') as f:
+        marks_data = json.load(f)  # Load JSON data directly
 except FileNotFoundError:
-    print("marks.txt not found. Make sure it's in the same directory as this script.")
-    exit(1) # Exit if the file isn't there
+    print("marks.json not found. Make sure it's in the same directory.")
+    exit(1)
+except json.JSONDecodeError:
+    print("Invalid JSON format in marks.json")
+    exit(1)
+
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
